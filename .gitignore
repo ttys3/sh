@@ -1,6 +1,7 @@
 /suppressions/
 /crashers/
-/sh-fuzz.zip
+/*-fuzz.zip
+/gopath/
 
 /_js/index.js*
 /_js/_js.js*

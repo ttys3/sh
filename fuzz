@@ -1,0 +1,21 @@
+#!/bin/sh
+
+set -e -x
+
+mkdir -p corpus
+go test -short ./...
+
+go mod vendor
+rm -rf gopath
+mkdir -p gopath/src/mvdan.cc/sh/v3
+cp *.go gopath/src/mvdan.cc/sh/v3
+mv vendor/*/ gopath/src/
+for subpkg in syntax expand interp shell fileutil; do
+	cp -r $subpkg/ gopath/src/mvdan.cc/sh/v3/
+done
+rm -rf vendor
+
+export GOPATH=$PWD/gopath
+
+go-fuzz-build mvdan.cc/sh/v3
+go-fuzz -bin=./gofuzzdep-fuzz.zip -workdir=.
